@@ -13,7 +13,6 @@ BIN_DIR   = bin
 
 # Files
 SRCS := \
-	$(SRC_DIR)/Account.cpp \
 	$(SRC_DIR)/Bank.cpp \
 	$(SRC_DIR)/main.cpp
 
