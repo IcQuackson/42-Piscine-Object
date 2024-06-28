@@ -9,9 +9,10 @@
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
 
-struct Bank
+class Bank
 {
-	struct Account
+public:
+	class Account
 	{
 		friend class Bank; 
 
