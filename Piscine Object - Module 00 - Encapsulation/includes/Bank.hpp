@@ -31,14 +31,14 @@ struct Bank
 
 private:
 	int currentAccountId;
-	int liquidity;
+	double liquidity;
 	std::map<int, Account *> clientAccounts;
 
 	void validateAccount(int id) const;
 
 public:
 	Bank();
-	const int &getLiquidity() const;
+	const double &getLiquidity() const;
 	const Account *createAccount(double initialBalance);
 	void deleteAccount(int id);
 	void setLiquidity(double value);

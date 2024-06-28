@@ -12,7 +12,7 @@ void Bank::validateAccount(int id) const
 	}
 }
 
-const int &Bank::getLiquidity() const
+const double &Bank::getLiquidity() const
 {
 	return this->liquidity;
 }
@@ -94,9 +94,10 @@ void Bank::depositToAccount(int id, double value)
 	}
 
 	Account *account = clientAccounts[id];
-	account->balance += value;
+	double fee = value * 0.05;
+	account->balance += value - fee;
 	// The bank must receive 5% of each money inflow 
-	this->liquidity += value * 0.05;
+	this->liquidity += fee;
 }
 
 void Bank::getLoan(int id, double value)

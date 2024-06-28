@@ -33,6 +33,8 @@ int main() {
     myBank.withdrawFromAccount(account2->getId(), 25);
     std::cout << "Account 1 Balance after Deposit: " << account1->getBalance() << std::endl;
     std::cout << "Account 2 Balance after Withdrawal: " << account2->getBalance() << std::endl;
+	// The bank must receive 5% of each money inflow 
+    std::cout << "Bank Liquidity after deposit commission: " << myBank.getLiquidity() << std::endl;
 
     // Negative Test: Deposit negative amount
     printColor(RED, "\nNegative Test: Deposit negative amount");
@@ -88,7 +90,7 @@ int main() {
         std::cout << "Error: " << e.what() << std::endl;
     }
 
-    // Test 6: Getting a loan
+    // Test 5: Getting a loan
     printColor(GREEN, "\nTest 5: Getting a Loan");
     std::cout << "Account 1 Balance before Loan: " << account1->getBalance() << std::endl;
     printColor(GREEN, "Getting a loan of 500 on Account 1");
