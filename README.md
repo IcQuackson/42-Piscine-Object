@@ -17,6 +17,15 @@ This project is designed to guide learners through fundamental software developm
 
 ### Module 01 - Relationship
 - **Objective:** Explore how variables or attributes can be interconnected using specific types of relationships, enhancing the understanding of data structure and OOP.
+- Composition:
+  - It describes a class that references one or more objects of other classes in instance variables.
+  - The classes of the objects being contained are owned exclusively by the container class and cannot exist independently.
+- Aggregation:
+  - Similar to Composition but the classes of the objects being contained can still exist independently of the container class.
+- Inheritance:
+  - A class that inherits anither class shares all the attributes and methods of the referenced class.
+- Association:
+  - Objects are aware of each other and can interact but there is no strong ownership or dependency implied.
 
 ### Module 02 - UML
 - **Objective:** Learn about the Unified Modeling Language (UML), which is used to graphically represent software architecture, aiding in the visualization and planning of software designs.
