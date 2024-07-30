@@ -2,11 +2,11 @@
 #include "Worker.hpp"
 #include "Workshop.hpp"
 
-Worker::Worker(Position position, Statistic statistic) : position(position), statistic(statistic), workshop(NULL)
+Worker::Worker(Position position, Statistic statistic) : position(position), statistic(statistic)
 {
 }
 
-Worker::Worker() : position(Position()), statistic(Statistic()), workshop(NULL)
+Worker::Worker() : position(Position()), statistic(Statistic())
 {
 }
 
@@ -43,9 +43,9 @@ const Tool *Worker::getTool(size_t index) const
     return NULL;
 }
 
-const IWorkshop *Worker::getWorkshop() const
+const std::vector<IWorkshop *> Worker::getWorkshops() const
 {
-    return this->workshop;
+    return this->workshops;
 }
 
 void Worker::setPosition(Position position)
@@ -56,11 +56,6 @@ void Worker::setPosition(Position position)
 void Worker::setStatistic(Statistic statistic)
 {
     this->statistic = statistic;
-}
-
-void Worker::setWorkshop(IWorkshop *workshop)
-{
-    this->workshop = workshop;
 }
 
 void Worker::addTool(Tool *tool)
@@ -88,9 +83,9 @@ void Worker::removeTool(Tool *tool)
             (*it)->removeOwner();
             this->tools.erase(it);
             // If the worker has a workshop and is no longer eligible, release the worker
-            if (this->workshop != NULL && !this->workshop->isWorkerEligible(this))
+            while (this->workshops.size() > 0 && !(*this->workshops.begin())->isWorkerEligible(this))
             {
-                this->workshop->releaseWorker(this);
+                (*this->workshops.begin())->releaseWorker(this);
             }
         }
     }
@@ -101,3 +96,38 @@ void Worker::work() const
     std::cout << "Worker working" << std::endl;
 }
 
+void Worker::addWorkshop(IWorkshop *workshop)
+{
+    if (!workshop)
+    {
+        std::cout << "Workshop is null" << std::endl;
+        return;
+    }
+    if (!workshop->isWorkerRegistered(this) || !workshop->isWorkerEligible(this))
+    {
+        std::cout << "Worker not eligible for workshop" << std::endl;
+        return;
+    }
+    if (std::find(this->workshops.begin(), this->workshops.end(), workshop) != this->workshops.end())
+    {
+        std::cout << "Worker already registered in workshop" << std::endl;
+        return;
+    }
+    else
+    {
+        std::cout << "Worker registered in workshop" << std::endl;
+        this->workshops.push_back(workshop);
+    }
+}
+
+void Worker::removeWorkshop(IWorkshop *workshop)
+{
+    if (workshop)
+    {
+        std::vector<IWorkshop *>::iterator it = std::find(this->workshops.begin(), this->workshops.end(), workshop);
+        if (it != this->workshops.end())
+        {
+            this->workshops.erase(it);
+        }
+    }
+}

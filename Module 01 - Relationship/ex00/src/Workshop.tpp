@@ -16,8 +16,8 @@ void Workshop<T>::registerWorker(Worker *worker)
     {
         if (dynamic_cast<T *>(*it))
         {
-            worker->setWorkshop(this);
             this->workers.push_back(worker);
+            worker->addWorkshop(this);
             return;
         }
     }
@@ -30,8 +30,8 @@ void Workshop<T>::releaseWorker(Worker *worker)
     {
         if (*it == worker)
         {
-            (*it)->setWorkshop(NULL);
             this->workers.erase(it);
+            worker->removeWorkshop(this);
             break;
         }
     }
@@ -64,6 +64,12 @@ bool Workshop<T>::isWorkerEligible(Worker *worker) const
         }
     }
     return false;
+}
+
+template <typename T>
+bool Workshop<T>::isWorkerRegistered(Worker *worker) const
+{
+    return std::find(this->workers.begin(), this->workers.end(), worker) != this->workers.end();
 }
 
 #endif

@@ -28,6 +28,7 @@ public:
     void executeWorkDay();
     const std::vector<Worker *> &getWorkers() const;
     bool isWorkerEligible(Worker *worker) const;
+    bool isWorkerRegistered(Worker *worker) const;
 };
 
 #include "../src/Workshop.tpp"

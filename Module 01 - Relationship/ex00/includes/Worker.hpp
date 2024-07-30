@@ -19,7 +19,7 @@ private:
     Position position;
     Statistic statistic;
     std::vector<Tool *> tools;
-    IWorkshop *workshop;
+    std::vector<IWorkshop *> workshops;
 
 public:
     Worker(Position position, Statistic statistic);
@@ -29,10 +29,11 @@ public:
     Statistic getStatistic() const;
     const std::vector<Tool *> getTools() const;
     const Tool *getTool(size_t index) const;
-    const IWorkshop *getWorkshop() const;
+    const std::vector<IWorkshop *> getWorkshops() const;
+    void addWorkshop(IWorkshop *workshop);
+    void removeWorkshop(IWorkshop *workshop);
     void setPosition(Position position);
     void setStatistic(Statistic statistic);
-    void setWorkshop(IWorkshop *workshop);
     void addTool(Tool *tool);
     void removeTool(Tool *tool);
     void work() const;

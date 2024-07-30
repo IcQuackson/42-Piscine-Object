@@ -136,7 +136,9 @@ void testRegisterWorker()
     workshop->registerWorker(worker);
 
     assert(workshop->getWorkers().size() == 1);
-    assert(worker->getWorkshop() == workshop);
+    // assert workshop is in registered workshops of worker
+    assert(worker->getWorkshops().size() == 1);
+    assert(worker->getWorkshops()[0] == workshop);
 
     delete workshop;
     delete worker;
@@ -172,8 +174,10 @@ void testWorkshopExecuteWorkDay()
     workshop->registerWorker(worker2);
 
     assert(workshop->getWorkers().size() == 2);
-    assert(worker1->getWorkshop() == workshop);
-    assert(worker2->getWorkshop() == workshop);
+    assert(worker1->getWorkshops().size() == 1);
+    assert(worker1->getWorkshops()[0] == workshop);
+    assert(worker2->getWorkshops().size() == 1);
+    assert(worker2->getWorkshops()[0] == workshop);
 
     workshop->executeWorkDay();
     delete workshop;
@@ -200,12 +204,13 @@ void testReleaseWorker()
     workshop->registerWorker(worker);
 
     assert(workshop->getWorkers().size() == 1);
-    assert(worker->getWorkshop() == workshop);
+    assert(worker->getWorkshops().size() == 1);
+    assert(worker->getWorkshops()[0] == workshop);
 
     workshop->releaseWorker(worker);
 
     assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshop() == NULL);
+    assert(worker->getWorkshops().size() == 0);
 
     delete workshop;
     delete worker;
@@ -249,7 +254,7 @@ void testRegisterWorkerWithWrongTool()
     workshop->registerWorker(worker);
 
     assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshop() == NULL);
+    assert(worker->getWorkshops().size() == 0);
 
     delete workshop;
     delete worker;
@@ -275,14 +280,51 @@ void testDeleteToolFromWorkerWithOnlyAllowedTool()
     workshop->registerWorker(worker);
 
     assert(workshop->getWorkers().size() == 1);
-    assert(worker->getWorkshop() == workshop);
+    assert(worker->getWorkshops().size() == 1);
+    assert(worker->getWorkshops()[0] == workshop);
+    assert(workshop != NULL);
 
     worker->removeTool(tool1);
 
     assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshop() == NULL);
+    assert(worker->getWorkshops().size() == 0);
 
     delete workshop;
+    delete worker;
+    delete tool1;
+    delete tool2;
+    std::cout << std::endl;
+}
+
+// test register to two different workshops
+void testRegisterToTwoWorkshops()
+{
+    printColor(GREEN, "Test 15: Register to two different workshops");
+    Workshop<Hammer> *workshop1 = new Workshop<Hammer>();
+    Workshop<Shovel> *workshop2 = new Workshop<Shovel>();
+    Worker *worker = new Worker();
+    Tool *tool1 = new Hammer();
+    Tool *tool2 = new Shovel();
+    worker->addTool(tool1);
+    worker->addTool(tool2);
+
+    assert(workshop1->getWorkers().size() == 0);
+    assert(workshop2->getWorkers().size() == 0);
+    assert(worker->getTools().size() == 2);
+    assert(worker->getTool<Hammer>() != NULL);
+    assert(worker->getTool<Shovel>() != NULL);
+
+    workshop1->registerWorker(worker);
+    workshop2->registerWorker(worker);
+
+    assert(workshop1->getWorkers().size() == 1);
+    assert(workshop2->getWorkers().size() == 1);
+    assert(worker->getWorkshops().size() == 2);
+    assert(worker->getWorkshops()[0] == workshop1);
+    assert(worker->getWorkshops()[1] == workshop2);
+
+    delete workshop1;
+    delete workshop2;
     delete worker;
     delete tool1;
     delete tool2;
@@ -305,5 +347,6 @@ int main()
     testGetToolByType();
     testRegisterWorkerWithWrongTool();
     testDeleteToolFromWorkerWithOnlyAllowedTool();
+    testRegisterToTwoWorkshops();
     return 0;
 }
