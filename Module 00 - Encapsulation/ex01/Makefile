@@ -1,5 +1,5 @@
 # Compiled Files
-NAME	=	encapsulation
+NAME	=	vector2
 
 # Compiler and flags
 CCXX		=	c++
@@ -13,8 +13,11 @@ BIN_DIR   = bin
 
 # Files
 SRCS := \
-	$(SRC_DIR)/Bank.cpp \
-	$(SRC_DIR)/main.cpp
+	$(SRC_DIR)/Vector2.cpp \
+	$(SRC_DIR)/Graph.cpp \
+	$(SRC_DIR)/main.cpp \
+
+
 
 OBJS	=	$(patsubst $(SRC_DIR)/%.cpp, $(BIN_DIR)/%.o, $(SRCS))
 
@@ -37,7 +40,7 @@ all:		$(NAME)
 $(NAME): $(OBJS)
 			@echo "$(CURSIVE)Compiling...$(DEFAULT)"
 			$(CCXX) $(CXXFLAGS) $(OBJS) -g -o $(NAME)
-			@echo "$(GREEN)webserv created successfully!$(DEFAULT)"
+			@echo "$(GREEN)$(NAME) created successfully!$(DEFAULT)"
 
 $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 			@mkdir -p $(dir $@)
