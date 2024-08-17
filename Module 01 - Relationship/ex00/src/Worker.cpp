@@ -86,7 +86,7 @@ void Worker::removeTool(Tool *tool)
             (*it)->removeOwner();
             _tools.erase(it);
             // If the worker has a workshop and is no longer eligible, release the worker
-            while (_workshops.size() > 0 && !(*_workshops.begin())->isWorkerEligible(this))
+            while (_workshops.size() > 0 && !(*_workshops.begin())->doesWorkerHaveRequiredTools(this))
             {
                 std::cout << "Worker no longer eligible for workshop" << std::endl;
                 (*_workshops.begin())->releaseWorker(this);
@@ -98,6 +98,11 @@ void Worker::removeTool(Tool *tool)
 
 void Worker::work() const
 {
+    if (_workshops.size() == 0)
+    {
+        std::cout << "Worker not registered in any workshop" << std::endl;
+        return;
+    }
     std::cout << "Worker working" << std::endl;
 }
 
