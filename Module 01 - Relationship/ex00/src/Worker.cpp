@@ -13,7 +13,7 @@ Worker::Worker() : position(Position()), statistic(Statistic())
 Worker::~Worker()
 {
     // Remove the owner of all tools
-    for (std::vector<Tool *>::iterator it = this->tools.begin(); it != this->tools.end(); ++it)
+    for (std::vector<Tool *>::iterator it = _tools.begin(); it != _tools.end(); ++it)
     {
         (*it)->removeOwner();
     }
@@ -31,21 +31,21 @@ Statistic Worker::getStatistic() const
 
 const std::vector<Tool *> Worker::getTools() const
 {
-    return this->tools;
+    return _tools;
 }
 
 const Tool *Worker::getTool(size_t index) const
 {
-    if (index < this->tools.size())
+    if (index < _tools.size())
     {
-        return this->tools[index];
+        return _tools[index];
     }
     return NULL;
 }
 
-const std::vector<IWorkshop *> Worker::getWorkshops() const
+const std::vector<Workshop *> Worker::getWorkshops() const
 {
-    return this->workshops;
+    return _workshops;
 }
 
 void Worker::setPosition(Position position)
@@ -65,11 +65,13 @@ void Worker::addTool(Tool *tool)
     {
         if (tool->getOwner())
         {
+            std::cout << "Tool already owned by another worker" << std::endl;
             tool->getOwner()->removeTool(tool);
         }
         tool->removeOwner();
         tool->setOwner(this);
-        this->tools.push_back(tool);
+        _tools.push_back(tool);
+        std::cout << "Tool added" << std::endl;
     }
 }
 
@@ -77,17 +79,20 @@ void Worker::removeTool(Tool *tool)
 {
     if (tool)
     {
-        std::vector<Tool *>::iterator it = std::find(this->tools.begin(), this->tools.end(), tool);
-        if (it != this->tools.end())
+        std::vector<Tool *>::iterator it = std::find(_tools.begin(), _tools.end(), tool);
+        if (it != _tools.end())
         {
+            std::cout << "Tool removed" << std::endl;
             (*it)->removeOwner();
-            this->tools.erase(it);
+            _tools.erase(it);
             // If the worker has a workshop and is no longer eligible, release the worker
-            while (this->workshops.size() > 0 && !(*this->workshops.begin())->isWorkerEligible(this))
+            while (_workshops.size() > 0 && !(*_workshops.begin())->isWorkerEligible(this))
             {
-                (*this->workshops.begin())->releaseWorker(this);
+                std::cout << "Worker no longer eligible for workshop" << std::endl;
+                (*_workshops.begin())->releaseWorker(this);
             }
         }
+        std::cout << "Tool not found" << std::endl;
     }
 }
 
@@ -96,19 +101,19 @@ void Worker::work() const
     std::cout << "Worker working" << std::endl;
 }
 
-void Worker::addWorkshop(IWorkshop *workshop)
+void Worker::addWorkshop(Workshop *workshop)
 {
     if (!workshop)
     {
         std::cout << "Workshop is null" << std::endl;
         return;
     }
-    if (!workshop->isWorkerRegistered(this) || !workshop->isWorkerEligible(this))
+    if (!workshop->isWorkerRegistered(this))
     {
         std::cout << "Worker not eligible for workshop" << std::endl;
         return;
     }
-    if (std::find(this->workshops.begin(), this->workshops.end(), workshop) != this->workshops.end())
+    if (std::find(_workshops.begin(), _workshops.end(), workshop) != _workshops.end())
     {
         std::cout << "Worker already registered in workshop" << std::endl;
         return;
@@ -116,18 +121,18 @@ void Worker::addWorkshop(IWorkshop *workshop)
     else
     {
         std::cout << "Worker registered in workshop" << std::endl;
-        this->workshops.push_back(workshop);
+        _workshops.push_back(workshop);
     }
 }
 
-void Worker::removeWorkshop(IWorkshop *workshop)
+void Worker::removeWorkshop(Workshop *workshop)
 {
     if (workshop)
     {
-        std::vector<IWorkshop *>::iterator it = std::find(this->workshops.begin(), this->workshops.end(), workshop);
-        if (it != this->workshops.end())
+        std::vector<Workshop *>::iterator it = std::find(_workshops.begin(), _workshops.end(), workshop);
+        if (it != _workshops.end())
         {
-            this->workshops.erase(it);
+            _workshops.erase(it);
         }
     }
 }

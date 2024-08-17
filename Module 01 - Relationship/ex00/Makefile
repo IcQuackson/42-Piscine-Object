@@ -20,10 +20,8 @@ CPP_SRCS := \
 	$(SRC_DIR)/Shovel.cpp \
 	$(SRC_DIR)/Hammer.cpp \
 	$(SRC_DIR)/Worker.cpp \
+	$(SRC_DIR)/Workshop.cpp \
 	$(SRC_DIR)/main.cpp
-
-TPP_SRCS := \
-	$(SRC_DIR)/Workshop.tpp
 
 # Object Files
 OBJS    =   $(CPP_SRCS:$(SRC_DIR)/%.cpp=$(BIN_DIR)/%.o)
@@ -47,7 +45,7 @@ $(NAME): $(OBJS)
 			$(CCXX) $(CXXFLAGS) $(OBJS) -g -o $(NAME)
 			@echo "$(GREEN)$(NAME) created successfully!$(DEFAULT)"
 
-$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp $(TPP_SRCS)
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 			@mkdir -p $(dir $@)
 			$(CCXX) $(CXXFLAGS) -c $< -o $@
 

@@ -29,3 +29,8 @@ int Tool::getNumberOfUses() const
 {
     return this->numberOfUses;
 }
+
+std::string Tool::getType() const
+{
+    return this->type;
+}

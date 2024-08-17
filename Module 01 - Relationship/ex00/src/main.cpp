@@ -10,6 +10,13 @@ void printColor(std::string color, std::string text) {
     std::cout << color << text << RESET << std::endl;
 }
 
+void myAssert(bool condition, std::string message) {
+    if (!condition) {
+        printColor(RED, "Assertion failed: " + message);
+    }
+    assert(condition);
+}
+
 void testToolCreation()
 {
     printColor(GREEN, "Test 1: Tool creation");
@@ -26,11 +33,11 @@ void testWorkerCreation()
     Worker *worker = new Worker(position, statistic);
 
     // assert that the worker has correct position and statistic
-    assert(worker->getPosition().getX() == 1);
-    assert(worker->getPosition().getY() == 2);
-    assert(worker->getPosition().getZ() == 3);
-    assert(worker->getStatistic().getLevel() == 4);
-    assert(worker->getStatistic().getExp() == 5);
+    myAssert(worker->getPosition().getX() == 1, "Worker has incorrect X position");
+    myAssert(worker->getPosition().getY() == 2, "Worker has incorrect Y position");
+    myAssert(worker->getPosition().getZ() == 3, "Worker has incorrect Z position");
+    myAssert(worker->getStatistic().getLevel() == 4, "Worker has incorrect level");
+    myAssert(worker->getStatistic().getExp() == 5, "Worker has incorrect experience");
 
     delete worker;
     std::cout << std::endl;
@@ -44,8 +51,8 @@ void testWorkerAddTool()
     worker->addTool(tool);
 
     // assert that the worker has the correct tool
-    assert(worker->getTools().size() == 1);
-    assert(worker->getTool(0) == tool);
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
+    myAssert(worker->getTool(0) == tool, "Worker does not have the correct tool");
 
     delete worker;
     delete tool;
@@ -59,11 +66,11 @@ void testRemoveToolFromWorker()
     Tool *tool = new Hammer();
     worker->addTool(tool);
 
-    assert(worker->getTools().size() == 1);
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
 
     worker->removeTool(tool);
 
-    assert(worker->getTools().size() == 0);
+    myAssert(worker->getTools().size() == 0, "Worker still has tools after removing");
 
     delete worker;
     delete tool;
@@ -77,11 +84,11 @@ void testDeleteWorkerWithTool()
     Tool *tool = new Hammer();
     worker->addTool(tool);
 
-    assert(worker->getTools().size() == 1);
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
 
     delete worker;
 
-    assert(tool != NULL);
+    myAssert(tool != NULL, "Tool was deleted along with the worker");
 
     delete tool;
     std::cout << std::endl;
@@ -95,14 +102,14 @@ void testChangeToolOwner()
     Tool *tool = new Hammer();
     worker1->addTool(tool);
 
-    assert(worker1->getTools().size() == 1);
-    assert(tool->getOwner() == worker1);
+    myAssert(worker1->getTools().size() == 1, "Worker 1 does not have the correct number of tools");
+    myAssert(tool->getOwner() == worker1, "Tool does not have the correct owner");
 
     worker2->addTool(tool);
 
-    assert(worker2->getTools().size() == 1);
-    assert(worker1->getTools().size() == 0);
-    assert(tool->getOwner() == worker2);
+    myAssert(worker2->getTools().size() == 1, "Worker 2 does not have the correct number of tools");
+    myAssert(worker1->getTools().size() == 0, "Worker 1 still has tools after changing ownership");
+    myAssert(tool->getOwner() == worker2, "Tool does not have the correct owner");
 
     delete worker1;
     delete worker2;
@@ -116,7 +123,7 @@ void testUseTool()
     Tool *tool = new Hammer();
     tool->use();
 
-    assert(tool->getNumberOfUses() == 1);
+    myAssert(tool->getNumberOfUses() == 1, "Tool did not increment the number of uses correctly");
 
     delete tool;
     std::cout << std::endl;
@@ -125,20 +132,23 @@ void testUseTool()
 void testRegisterWorker()
 {
     printColor(GREEN, "Test 8: Register worker");
-    Workshop<Hammer> *workshop = new Workshop<Hammer>();
+
+    std::vector<std::string> requiredTools;
+    requiredTools.push_back("Hammer");
+
+    Workshop *workshop = new Workshop(requiredTools);
     Worker *worker = new Worker();
     Tool *tool = new Hammer();
     worker->addTool(tool);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getTools().size() == 1);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop already has workers");
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
 
     workshop->registerWorker(worker);
 
-    assert(workshop->getWorkers().size() == 1);
-    // assert workshop is in registered workshops of worker
-    assert(worker->getWorkshops().size() == 1);
-    assert(worker->getWorkshops()[0] == workshop);
+    myAssert(workshop->getWorkers().size() == 1, "Workshop did not register the worker");
+    myAssert(worker->getWorkshops().size() == 1, "Worker did not register the workshop");
+    myAssert(worker->getWorkshops()[0] == workshop, "Worker registered to the wrong workshop");
 
     delete workshop;
     delete worker;
@@ -158,7 +168,11 @@ void testWorkerWork()
 void testWorkshopExecuteWorkDay()
 {
     printColor(GREEN, "Test 10: Workshop execute work day");
-    Workshop<Hammer> *workshop = new Workshop<Hammer>();
+
+    std::vector<std::string> requiredTools;
+    requiredTools.push_back("Hammer");
+    Workshop *workshop = new Workshop(requiredTools);
+
     Worker *worker1 = new Worker();
     Worker *worker2 = new Worker();
     Tool *tool1 = new Hammer();
@@ -166,18 +180,18 @@ void testWorkshopExecuteWorkDay()
     worker1->addTool(tool1);
     worker2->addTool(tool2);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker1->getTools().size() == 1);
-    assert(worker2->getTools().size() == 1);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop already has workers");
+    myAssert(worker1->getTools().size() == 1, "Worker 1 does not have the correct number of tools");
+    myAssert(worker2->getTools().size() == 1, "Worker 2 does not have the correct number of tools");
 
     workshop->registerWorker(worker1);
     workshop->registerWorker(worker2);
 
-    assert(workshop->getWorkers().size() == 2);
-    assert(worker1->getWorkshops().size() == 1);
-    assert(worker1->getWorkshops()[0] == workshop);
-    assert(worker2->getWorkshops().size() == 1);
-    assert(worker2->getWorkshops()[0] == workshop);
+    myAssert(workshop->getWorkers().size() == 2, "Workshop did not register all workers");
+    myAssert(worker1->getWorkshops().size() == 1, "Worker 1 did not register the workshop");
+    myAssert(worker1->getWorkshops()[0] == workshop, "Worker 1 registered to the wrong workshop");
+    myAssert(worker2->getWorkshops().size() == 1, "Worker 2 did not register the workshop");
+    myAssert(worker2->getWorkshops()[0] == workshop, "Worker 2 registered to the wrong workshop");
 
     workshop->executeWorkDay();
     delete workshop;
@@ -191,26 +205,29 @@ void testWorkshopExecuteWorkDay()
 void testReleaseWorker()
 {
     printColor(GREEN, "Test 11: Release worker");
-    Workshop<Hammer> *workshop = new Workshop<Hammer>();
+
+    std::vector<std::string> requiredTools;
+    requiredTools.push_back("Hammer");
+    Workshop *workshop = new Workshop(requiredTools);
     Worker *worker = new Worker();
     Tool *tool = new Hammer();
     worker->addTool(tool);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getTools().size() == 1);
-    assert(worker->getTool<Hammer>() != NULL);
-    assert(dynamic_cast<const Hammer *>(worker->getTool<Hammer>()) != NULL);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop already has workers");
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
+    myAssert(worker->getTool<Hammer>() != NULL, "Worker does not have the correct tool");
+    myAssert(dynamic_cast<const Hammer *>(worker->getTool<Hammer>()) != NULL, "Worker does not have the correct tool type");
 
     workshop->registerWorker(worker);
 
-    assert(workshop->getWorkers().size() == 1);
-    assert(worker->getWorkshops().size() == 1);
-    assert(worker->getWorkshops()[0] == workshop);
+    myAssert(workshop->getWorkers().size() == 1, "Workshop did not register the worker");
+    myAssert(worker->getWorkshops().size() == 1, "Worker did not register the workshop");
+    myAssert(worker->getWorkshops()[0] == workshop, "Worker registered to the wrong workshop");
 
     workshop->releaseWorker(worker);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshops().size() == 0);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop did not release the worker");
+    myAssert(worker->getWorkshops().size() == 0, "Worker did not release the workshop");
 
     delete workshop;
     delete worker;
@@ -227,10 +244,10 @@ void testGetToolByType()
     worker->addTool(tool1);
     worker->addTool(tool2);
 
-    assert(worker->getTool<Hammer>() != NULL);
-    assert(worker->getTool<Shovel>() != NULL);
-    assert(worker->getTool<Hammer>() == tool1);
-    assert(worker->getTool<Shovel>() == tool2);
+    myAssert(worker->getTool<Hammer>() != NULL, "Worker does not have the correct tool");
+    myAssert(worker->getTool<Shovel>() != NULL, "Worker does not have the correct tool");
+    myAssert(worker->getTool<Hammer>() == tool1, "Worker does not have the correct tool");
+    myAssert(worker->getTool<Shovel>() == tool2, "Worker does not have the correct tool");
 
     delete worker;
     delete tool1;
@@ -242,19 +259,22 @@ void testGetToolByType()
 void testRegisterWorkerWithWrongTool()
 {
     printColor(GREEN, "Test 13: Register worker with wrong tool");
-    Workshop<Hammer> *workshop = new Workshop<Hammer>();
+
+    std::vector<std::string> requiredTools;
+    requiredTools.push_back("Hammer");
+    Workshop *workshop = new Workshop(requiredTools);
     Worker *worker = new Worker();
     Tool *tool = new Shovel();
     worker->addTool(tool);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getTools().size() == 1);
-    assert(worker->getTool<Shovel>() != NULL);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop already has workers");
+    myAssert(worker->getTools().size() == 1, "Worker does not have the correct number of tools");
+    myAssert(worker->getTool<Shovel>() != NULL, "Worker does not have the correct tool");
 
     workshop->registerWorker(worker);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshops().size() == 0);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop registered the worker with wrong tool");
+    myAssert(worker->getWorkshops().size() == 0, "Worker registered to the workshop with wrong tool");
 
     delete workshop;
     delete worker;
@@ -265,29 +285,32 @@ void testRegisterWorkerWithWrongTool()
 void testDeleteToolFromWorkerWithOnlyAllowedTool()
 {
     printColor(GREEN, "Test 14: Delete tool from worker with only allowed tool");
-    Workshop<Hammer> *workshop = new Workshop<Hammer>();
+
+    std::vector<std::string> requiredTools;
+    requiredTools.push_back("Hammer");
+    Workshop *workshop = new Workshop(requiredTools);
     Worker *worker = new Worker();
     Tool *tool1 = new Hammer();
     Tool *tool2 = new Shovel();
     worker->addTool(tool1);
     worker->addTool(tool2);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getTools().size() == 2);
-    assert(worker->getTool<Hammer>() != NULL);
-    assert(worker->getTool<Shovel>() != NULL);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop already has workers");
+    myAssert(worker->getTools().size() == 2, "Worker does not have the correct number of tools");
+    myAssert(worker->getTool<Hammer>() != NULL, "Worker does not have the correct tool");
+    myAssert(worker->getTool<Shovel>() != NULL, "Worker does not have the correct tool");
 
     workshop->registerWorker(worker);
 
-    assert(workshop->getWorkers().size() == 1);
-    assert(worker->getWorkshops().size() == 1);
-    assert(worker->getWorkshops()[0] == workshop);
-    assert(workshop != NULL);
+    myAssert(workshop->getWorkers().size() == 1, "Workshop did not register the worker");
+    myAssert(worker->getWorkshops().size() == 1, "Worker did not register the workshop");
+    myAssert(worker->getWorkshops()[0] == workshop, "Worker registered to the wrong workshop");
+    myAssert(workshop != NULL, "Workshop is NULL");
 
     worker->removeTool(tool1);
 
-    assert(workshop->getWorkers().size() == 0);
-    assert(worker->getWorkshops().size() == 0);
+    myAssert(workshop->getWorkers().size() == 0, "Workshop did not release the worker");
+    myAssert(worker->getWorkshops().size() == 0, "Worker did not release the workshop");
 
     delete workshop;
     delete worker;
@@ -300,28 +323,34 @@ void testDeleteToolFromWorkerWithOnlyAllowedTool()
 void testRegisterToTwoWorkshops()
 {
     printColor(GREEN, "Test 15: Register to two different workshops");
-    Workshop<Hammer> *workshop1 = new Workshop<Hammer>();
-    Workshop<Shovel> *workshop2 = new Workshop<Shovel>();
+
+    std::vector<std::string> requiredTools1;
+    requiredTools1.push_back("Hammer");
+    Workshop *workshop1 = new Workshop(requiredTools1);
+
+    std::vector<std::string> requiredTools2;
+    requiredTools2.push_back("Shovel");
+    Workshop *workshop2 = new Workshop(requiredTools2);
     Worker *worker = new Worker();
     Tool *tool1 = new Hammer();
     Tool *tool2 = new Shovel();
     worker->addTool(tool1);
     worker->addTool(tool2);
 
-    assert(workshop1->getWorkers().size() == 0);
-    assert(workshop2->getWorkers().size() == 0);
-    assert(worker->getTools().size() == 2);
-    assert(worker->getTool<Hammer>() != NULL);
-    assert(worker->getTool<Shovel>() != NULL);
+    myAssert(workshop1->getWorkers().size() == 0, "Workshop 1 already has workers");
+    myAssert(workshop2->getWorkers().size() == 0, "Workshop 2 already has workers");
+    myAssert(worker->getTools().size() == 2, "Worker does not have the correct number of tools");
+    myAssert(worker->getTool<Hammer>() != NULL, "Worker does not have the correct tool");
+    myAssert(worker->getTool<Shovel>() != NULL, "Worker does not have the correct tool");
 
     workshop1->registerWorker(worker);
     workshop2->registerWorker(worker);
 
-    assert(workshop1->getWorkers().size() == 1);
-    assert(workshop2->getWorkers().size() == 1);
-    assert(worker->getWorkshops().size() == 2);
-    assert(worker->getWorkshops()[0] == workshop1);
-    assert(worker->getWorkshops()[1] == workshop2);
+    myAssert(workshop1->getWorkers().size() == 1, "Workshop 1 did not register the worker");
+    myAssert(workshop2->getWorkers().size() == 1, "Workshop 2 did not register the worker");
+    myAssert(worker->getWorkshops().size() == 2, "Worker did not register to both workshops");
+    myAssert(worker->getWorkshops()[0] == workshop1, "Worker registered to the wrong workshop");
+    myAssert(worker->getWorkshops()[1] == workshop2, "Worker registered to the wrong workshop");
 
     delete workshop1;
     delete workshop2;

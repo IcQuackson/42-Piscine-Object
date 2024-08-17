@@ -3,7 +3,6 @@
 #ifndef WORKSHOP_HPP
 #define WORKSHOP_HPP
 
-#include "IWorkshop.hpp"
 #include <iostream>
 #include <vector>
 
@@ -15,22 +14,23 @@
 class Worker;
 class Tool;
 
-template <typename T>
-class Workshop : public IWorkshop
+class Workshop
 {
-
 private:
-    std::vector<Worker *> workers;
+    std::vector<Worker *> _workers;
+    std::vector<std::string> _requiredTools;
 
 public:
+    Workshop(std::vector<std::string> requiredTools);
     void registerWorker(Worker *worker);
     void releaseWorker(Worker *worker);
     void executeWorkDay();
     const std::vector<Worker *> &getWorkers() const;
     bool isWorkerEligible(Worker *worker) const;
     bool isWorkerRegistered(Worker *worker) const;
+    bool isToolRequired(Tool *tool) const;
+    bool doesWorkerHaveRequiredTools(Worker *worker) const;
+    static void printColor(std::string color, std::string message);
 };
-
-#include "../src/Workshop.tpp"
 
 #endif

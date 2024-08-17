@@ -4,6 +4,8 @@ Hammer::Hammer()
 {
     this->numberOfUses = 0;
     this->owner = NULL;
+    this->type = "Hammer";
+    std::cout << "Hammer created" << std::endl;
 }
 
 void Hammer::use()

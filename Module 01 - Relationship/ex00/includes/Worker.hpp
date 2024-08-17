@@ -3,8 +3,9 @@
 
 #include "Position.hpp"
 #include "Statistic.hpp"
+#include "Workshop.hpp"
 #include "Tool.hpp"
-#include "IWorkshop.hpp"
+#include <cstdarg>
 #include <vector>
 #include <cstddef>
 #include <algorithm>
@@ -12,14 +13,15 @@
 class Position;
 class Statistic;
 class Tool;
+class Workshop;
 
 class Worker
 {
 private:
     Position position;
     Statistic statistic;
-    std::vector<Tool *> tools;
-    std::vector<IWorkshop *> workshops;
+    std::vector<Tool *> _tools;
+    std::vector<Workshop *> _workshops;
 
 public:
     Worker(Position position, Statistic statistic);
@@ -29,18 +31,19 @@ public:
     Statistic getStatistic() const;
     const std::vector<Tool *> getTools() const;
     const Tool *getTool(size_t index) const;
-    const std::vector<IWorkshop *> getWorkshops() const;
-    void addWorkshop(IWorkshop *workshop);
-    void removeWorkshop(IWorkshop *workshop);
+    const std::vector<Workshop *> getWorkshops() const;
+    void addWorkshop(Workshop *workshop);
+    void removeWorkshop(Workshop *workshop);
     void setPosition(Position position);
     void setStatistic(Statistic statistic);
     void addTool(Tool *tool);
     void removeTool(Tool *tool);
     void work() const;
 
-    template<typename ToolType> const ToolType *getTool() const
+    template<typename ToolType>
+    const ToolType *getTool() const
     {
-        for (std::vector<Tool *>::const_iterator it = this->tools.begin(); it != this->tools.end(); ++it)
+        for (std::vector<Tool *>::const_iterator it = _tools.begin(); it != _tools.end(); ++it)
         {
             if (dynamic_cast<ToolType *>(*it))
             {

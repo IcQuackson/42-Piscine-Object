@@ -6,6 +6,7 @@ Shovel::Shovel()
 {
     this->numberOfUses = 0;
     this->owner = NULL;
+    this->type = "Shovel";
 }
 
 void Shovel::use()
