@@ -5,8 +5,6 @@
 #include "salariedEmployee.hpp"
 #include "hourlyEmployee.hpp"
 
-
-// test TempWorker register mobilized hours
 void testTempWorkerRegisterMobilizedHours()
 {
     TempWorker tempWorker(10);
@@ -14,7 +12,6 @@ void testTempWorkerRegisterMobilizedHours()
     assert(tempWorker.getMobilizedHours() == 10);
 }
 
-// test TempWorker execute workday with 10 mobilized hours
 void testTempWorkerExecuteWorkdayWith10MobilizedHours()
 {
     TempWorker tempWorker(10);
@@ -24,7 +21,6 @@ void testTempWorkerExecuteWorkdayWith10MobilizedHours()
     assert(tempWorker.getMobilizedHours() == 3);
 }
 
-// test TempWorker execute workday with 5 mobilized hours
 void testTempWorkerExecuteWorkdayWith5MobilizedHours()
 {
     TempWorker tempWorker(10);
@@ -34,7 +30,6 @@ void testTempWorkerExecuteWorkdayWith5MobilizedHours()
     assert(tempWorker.getMobilizedHours() == 0);
 }
 
-// test TempWorker execute workday without mobilized hours
 void testTempWorkerExecuteWorkdayWithoutMobilizedHours()
 {
     TempWorker tempWorker(10);
@@ -42,7 +37,6 @@ void testTempWorkerExecuteWorkdayWithoutMobilizedHours()
     assert(tempWorker.getWorkedHoursLog().size() == 1);
 }
 
-// test ContractEmployee register non worked hours
 void testContractEmployeeRegisterNonWorkedHours()
 {
     ContractEmployee contractEmployee(10);
@@ -50,7 +44,6 @@ void testContractEmployeeRegisterNonWorkedHours()
     assert(contractEmployee.getNonWorkedHours() == 10);
 }
 
-// test Apprentice register school hours and non worked hours
 void testApprenticeRegisterSchoolHoursAndNonWorkedHours()
 {
     Apprentice apprentice(10);
@@ -60,7 +53,6 @@ void testApprenticeRegisterSchoolHoursAndNonWorkedHours()
     assert(apprentice.getNonWorkedHours() == 5);
 }
 
-// test EmployeeManager add and remove employees
 void testEmployeeManagerAddAndRemoveEmployees()
 {
     EmployeeManager employeeManager;
@@ -84,7 +76,6 @@ void testEmployeeManagerAddAndRemoveEmployees()
     assert(employeeManager.getEmployees().size() == 0);
 }
 
-// test calculate payroll
 void testCalculatePayroll()
 {
     EmployeeManager employeeManager;

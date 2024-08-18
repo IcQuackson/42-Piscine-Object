@@ -18,22 +18,26 @@ public:
         if (employee != NULL)
         {
             _employees.push_back(employee);
+            std::cout << "Employee added" << std::endl;
         }
     }
 
     void removeEmployee(Employee *employee)
     {
-        if (employee != NULL)
+        if (employee == NULL)
         {
-            for (size_t i = 0; i < _employees.size(); i++)
+            return;
+        }
+        for (size_t i = 0; i < _employees.size(); i++)
+        {
+            if (_employees.at(i) == employee)
             {
-                if (_employees.at(i) == employee)
-                {
-                    _employees.erase(_employees.begin() + i);
-                    return;
-                }
+                std::cout << "Employee removed" << std::endl;
+                _employees.erase(_employees.begin() + i);
+                return;
             }
         }
+        std::cout << "Employee not found" << std::endl;
     }
 
     std::vector<Employee *> getEmployees() const
@@ -45,6 +49,7 @@ public:
     {
         for (size_t i = 0; i < _employees.size(); i++)
         {
+            std::cout << "Executing workday"<< std::endl;
             _employees.at(i)->executeWorkday();
         }
     }
