@@ -1,5 +1,5 @@
 # Compiled Files
-NAME    =   single
+NAME    =   singleton
 
 # Compiler and flags
 CCXX        =   c++
