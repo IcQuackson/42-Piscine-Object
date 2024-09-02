@@ -3,7 +3,7 @@ NAME    =   single
 
 # Compiler and flags
 CCXX        =   c++
-CXXFLAGS    =   -Wall -Werror -Wextra -std=c++98 -g -I includes
+CXXFLAGS    =   -Wall -Werror -Wextra -std=c++11 -g -I includes
 
 # Arguments
 ARGS    =   ""

@@ -33,7 +33,7 @@ public:
 	{
 		if (canEnter())
 		{
-			_occupants.push_back(std::person));
+			_occupants.push_back(person);
 		}
 	}
 
