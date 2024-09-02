@@ -22,6 +22,17 @@ void testGetInstance()
     printGreen("Passed");
 }
 
+void testGetItem()
+{
+    std::cout << "testGetItem" << std::endl;
+    ListSingleton<int> *list = ListSingleton<int>::getInstance();
+    int *item = new int(1);
+    list->add(item);
+    assert(list->get(item) == item);
+
+    printGreen("Passed");
+}
+
 void testRemove()
 {
     std::cout << "testRemove" << std::endl;
@@ -60,7 +71,7 @@ void testPrint()
 void testCreateObjects()
 {
     std::cout << "testCreateObjects" << std::endl;
-    
+
     ListSingleton<Student> *studentList = ListSingleton<Student>::getInstance();
     ListSingleton<Staff> *staffList = ListSingleton<Staff>::getInstance();
     ListSingleton<Course> *courseList = ListSingleton<Course>::getInstance();
@@ -100,6 +111,7 @@ void testAddObjects() {
 int main()
 {
     testGetInstance();
+    testGetItem();
     testRemove();
     testClear();
     testPrint();

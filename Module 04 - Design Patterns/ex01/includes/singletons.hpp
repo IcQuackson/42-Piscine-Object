@@ -39,6 +39,18 @@ public:
         return false;
     }
 
+    T *get(T *item)
+    {
+        for (auto it = list.begin(); it != list.end(); it++)
+        {
+            if (*it == item)
+            {
+                return *it;
+            }
+        }
+        return nullptr;
+    }
+
     void print()
     {
         for (auto item : list)
